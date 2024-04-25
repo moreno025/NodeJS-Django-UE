@@ -37,5 +37,5 @@ const HandleRequest = async (req, res) => {
 const server = http.createServer(HandleRequest);
 server.listen(3000, () => {
     console.log('Escuchando en el puerto 3000');
-})
+});
 
