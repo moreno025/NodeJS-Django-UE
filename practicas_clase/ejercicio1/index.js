@@ -1,5 +1,5 @@
-console.log('Hola Mundo!')
+console.log('Hola Mundo!');
 
-globalThis.nombre = 'Sergio'
+globalThis.nombre = 'Carmen';
 
-console.log(nombre)
+console.log(nombre);
