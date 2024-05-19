@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 
 const app = express();
 app.use(express.json());
+require('dotenv').config();
 const port = 3000;
 const { connectToDatabase } = require('./database');
-const apiKey = 'AIzaSyD4ah8b2ggczdb9NKuCqMSFFwayA4q1Ta4';
+const apiKey = process.env.API_KEY;
 const apiUrl = "https://www.googleapis.com/youtube/v3";
 const youtube = google.youtube({
     version: "v3",
