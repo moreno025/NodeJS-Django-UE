@@ -8,7 +8,6 @@ require('dotenv').config();
 const port = 3000;
 const { connectToDatabase } = require('./database');
 const apiKey = process.env.API_KEY;
-const apiUrl = "https://www.googleapis.com/youtube/v3";
 const youtube = google.youtube({
     version: "v3",
     auth: apiKey,
@@ -16,6 +15,7 @@ const youtube = google.youtube({
 
 //Defino el schema de mi coleccion de videos
 const videoSchema = new mongoose.Schema({
+    id: String,
     title: String,
     description: String,
     viewCount: String,
