@@ -21,13 +21,11 @@
 
 ## Prácticas entregables
 
-- **Servidor básico Django**
+- **appDjango --> Servidor básico Django**
+- **Servidor completo en django**
 
 # Estructura
-
-      ├── 📁 Practicas_clase/ 
-          ├── 📁 
           
-      ├── 📁 Practicas_entregables/
-           ├── 📁 Practica_servidor_django/ # Código, txt con observaciones y comentarios 
+      ├── 📁 djangoUE/
+           ├── 📁 appDjango (Servidor básico django)/ # Código con APIs Views Genéricas
            
