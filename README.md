@@ -4,6 +4,7 @@
 
 - **Servidor básico**
 - **API Youtube**
+- **Proyecto Gestión/Reservas**
 
 # Estructura
 
@@ -13,6 +14,7 @@
           
       ├── 📁 Practicas_entregables/
            ├── 📁 Practica_servidor_basico/ # Código, txt con observaciones y comentarios 
+           ├── 📁 Practica_Final_Backend/ # Código completo
            ├── 📁 Practica_API_Node_Express/ # Código completo
                 ├── 📁 Database/ # Conexion Bbdd
 
@@ -21,13 +23,11 @@
 
 ## Prácticas entregables
 
-- **Servidor básico Django**
+- **appDjango --> Servidor básico Django**
+- **Servidor completo en django**
 
 # Estructura
-
-      ├── 📁 Practicas_clase/ 
-          ├── 📁 
           
-      ├── 📁 Practicas_entregables/
-           ├── 📁 Practica_servidor_django/ # Código, txt con observaciones y comentarios 
+      ├── 📁 djangoUE/
+           ├── 📁 appDjango (Servidor básico django)/ # Código con APIs Views Genéricas
            
