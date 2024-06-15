@@ -12,5 +12,4 @@ const ReservaSchema = new Schema({
 
 });
 
-// Se crea/exporta el modelo de Reserva
 module.exports = mongoose.model('Reserva', ReservaSchema);

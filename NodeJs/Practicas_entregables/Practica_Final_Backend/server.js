@@ -21,7 +21,7 @@ conectarDb();
 // Rutas de los controllers
 app.use('/users', userRoutes);
 app.use('/reservas', reservaRoutes);
-app.use('/restaurante', restauranteRoutes);
+app.use('/restaurantes', restauranteRoutes);
 
 // Conexion server
 app.listen(port, () => {
