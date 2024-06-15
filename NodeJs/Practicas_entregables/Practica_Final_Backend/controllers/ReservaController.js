@@ -15,15 +15,12 @@ exports.crearReserva = async (req, res) => {
             return res.status(400).json({ message: 'Todos los campos deben estar informados' });
         }
 
-        // Buscar el restaurante por su identificador personalizado
         const restaurante = await Restaurante.findOne({ idRestaurante: idRestaurante });
         if (!restaurante) {
             return res.status(404).json({ message: 'Restaurante no encontrado' });
         }
 
-        // Comprobar disponibilidad
         const CAPACIDAD_MAX = restaurante.capacidad;
-
         const reservasExistentes = await Reserva.find({ fecha, hora });
         const plazasDisponibles = reservasExistentes.reduce((acc, res) => acc + res.plazas, 0);
 
@@ -31,16 +28,11 @@ exports.crearReserva = async (req, res) => {
             return res.status(400).json({ message: 'No hay plazas disponibles' });
         }
 
-        // Buscar el usuario por su ID
         const user = await User.findOne(filtro);
-        console.log("Buscando usuario con ID:", user.idUser);
         if (!user) {
             return res.status(404).json({ message: 'No se ha encontrado el usuario' });
         }
 
-        console.log("Usuario encontrado:", user);
-
-        // Crear la nueva reserva
         const nuevaReserva = new Reserva({
             fecha,
             hora,
@@ -90,7 +82,6 @@ exports.getReservasByStatus = async (req, res) => {
 
         const objectIdUser = user._id;
         const reservas = await Reserva.find({ user: objectIdUser, estado: estado }).populate('user');
-
         res.status(200).json(reservas);
     }catch(error){
         res.status(500).json({ message: error.message });
@@ -109,10 +100,7 @@ exports.getDisponibilidad = async (req, res) => {
         }
 
         const CAPACIDAD_MAX = restaurante.capacidad;
-        
-        // Buscar las reservas existentes para la misma fecha y hora
         const reservasExistentes = await Reserva.find({ idRestaurante: restaurante._id, fecha, hora });
-
         const plazasOcupadas = reservasExistentes.reduce((acc, res) => acc + res.plazas, 0);
         const plazasDisponibles = CAPACIDAD_MAX - plazasOcupadas;
 
@@ -125,14 +113,12 @@ exports.getDisponibilidad = async (req, res) => {
 };
 
 
-
 // Editar reserva segun el idUser y el id de la reserva (PUT)
 exports.updateReservaById = async (req, res) => {
     try {
         const { idUser, id } = req.params;
         const updateData = req.body;
 
-        // Buscar el usuario por su identificador personalizado
         const user = await User.findOne({ idUser: idUser });
 
         if (!user) {
@@ -140,8 +126,6 @@ exports.updateReservaById = async (req, res) => {
         }
 
         const objectIdUser = user._id;
-
-        // Obtener la reserva actual
         const reservaActual = await Reserva.findOne({ _id: id, user: objectIdUser }).populate('user');
 
         if (!reservaActual) {
@@ -195,7 +179,6 @@ exports.confirmarReserva = async (req, res) => {
         reserva.estado = 'Confirmada';
 
         await enviarCorreoConfirmacion(reserva, user);
-
         await reserva.save();
         res.status(200).json({ message: 'Reserva confirmada para la fecha ' + fecha + ' a nombre de ' + user.nombre });
     } catch (error) {
