@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const { enviarCorreoConfirmacion } = require('../services/emailService');
 const Reserva = require('../models/Reserva.model');
 const User = require('../models/User.model');
 const Restaurante = require('../models/Restaurante.model');
@@ -97,19 +97,81 @@ exports.getReservasByStatus = async (req, res) => {
     }
 };
 
+
+// Mostrar la disponibilidad de un restaurante según fecha y hora (GET)
+exports.getDisponibilidad = async (req, res) => {
+    try {
+        const { idRestaurante, fecha, hora } = req.params;
+        const restaurante = await Restaurante.findOne({ idRestaurante: idRestaurante });
+
+        if (!restaurante) {
+            return res.status(404).json({ message: 'Restaurante no encontrado' });
+        }
+
+        const CAPACIDAD_MAX = restaurante.capacidad;
+        
+        // Buscar las reservas existentes para la misma fecha y hora
+        const reservasExistentes = await Reserva.find({ idRestaurante: restaurante._id, fecha, hora });
+
+        const plazasOcupadas = reservasExistentes.reduce((acc, res) => acc + res.plazas, 0);
+        const plazasDisponibles = CAPACIDAD_MAX - plazasOcupadas;
+
+        res.status(200).json({ 
+            message: `Existen ${plazasDisponibles} plazas disponibles en el restaurante ${restaurante.nombre} para la fecha ${fecha} a las ${hora}.`
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
 // Editar reserva segun el idUser y el id de la reserva (PUT)
 exports.updateReservaById = async (req, res) => {
-    try{
-
+    try {
         const { idUser, id } = req.params;
         const updateData = req.body;
-        const reservaUpdate = await Reserva.findOneAndUpdate({ _id: id, user: idUser }, updateData, { new: true });
 
-        if(!reservaUpdate){
+        // Buscar el usuario por su identificador personalizado
+        const user = await User.findOne({ idUser: idUser });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const objectIdUser = user._id;
+
+        // Obtener la reserva actual
+        const reservaActual = await Reserva.findOne({ _id: id, user: objectIdUser }).populate('user');
+
+        if (!reservaActual) {
             return res.status(404).json({ message: 'Reserva no encontrada' });
         }
-        res.status(200).json(reservaUpdate);
-    }catch(error){
+
+        if (updateData.plazas) {
+            const restaurante = await Restaurante.findById(reservaActual.idRestaurante);
+
+            if (!restaurante) {
+                return res.status(404).json({ message: 'Restaurante no encontrado' });
+            }
+
+            const CAPACIDAD_MAX = restaurante.capacidad;
+            const reservasExistentes = await Reserva.find({ fecha: updateData.fecha, hora: updateData.hora });
+            const plazasDisponibles = reservasExistentes.reduce((acc, res) => acc + (res._id.equals(reservaActual._id) ? 0 : res.plazas), 0);
+
+            if (plazasDisponibles + updateData.plazas > CAPACIDAD_MAX) {
+                return res.status(400).json({ message: 'No hay plazas disponibles' });
+            }
+        }
+
+        const reservaUpdate = await Reserva.findOneAndUpdate({ _id: id, user: objectIdUser }, updateData, { new: true });
+
+        if (!reservaUpdate) {
+            return res.status(404).json({ message: 'Reserva no encontrada' });
+        }
+        res.status(200).json({ message: "Se ha actualizado la reserva. Nombre: " + user.nombre + " Fecha: " + 
+            reservaActual.fecha + " Hora: " + reservaActual.hora + " Plazas: " + reservaActual.plazas });
+    } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
@@ -131,6 +193,9 @@ exports.confirmarReserva = async (req, res) => {
             return res.status(404).json({ message: 'Reserva no encontrada o no pertenece al usuario' });
         }
         reserva.estado = 'Confirmada';
+
+        await enviarCorreoConfirmacion(reserva, user);
+
         await reserva.save();
         res.status(200).json({ message: 'Reserva confirmada para la fecha ' + fecha + ' a nombre de ' + user.nombre });
     } catch (error) {
