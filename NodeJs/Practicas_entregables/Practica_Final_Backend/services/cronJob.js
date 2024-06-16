@@ -29,7 +29,7 @@ const enviarAvisoReserva = async () => {
 };
 
 const startCronJob = () => {
-    cron.schedule('0 1 * * *', sendDailyReminders);
+    cron.schedule('0 1 * * *', enviarAvisoReserva);
     console.log('Cron job iniciado: recordatorios de reservas serán enviados');
 };
 

@@ -2,7 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const conectarDb = require('./database/database.js');
-const startCronJob = require('./cronJob');
+const startCronJob = require('./services/cronJob.js');
 require('dotenv').config();
 
 // Routes de las APIs
