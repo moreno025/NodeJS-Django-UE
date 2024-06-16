@@ -1,4 +1,4 @@
-const { enviarCorreoConfirmacion } = require('../services/emailService');
+const { enviarCorreoConfirmacion, sendReservaActualizacionEmail, sendReservaAvisoEmail } = require('../services/emailService');
 const Reserva = require('../models/Reserva.model');
 const User = require('../models/User.model');
 const Restaurante = require('../models/Restaurante.model');
@@ -153,8 +153,9 @@ exports.updateReservaById = async (req, res) => {
         if (!reservaUpdate) {
             return res.status(404).json({ message: 'Reserva no encontrada' });
         }
-        res.status(200).json({ message: "Se ha actualizado la reserva. Nombre: " + user.nombre + " Fecha: " + 
-            reservaActual.fecha + " Hora: " + reservaActual.hora + " Plazas: " + reservaActual.plazas });
+
+        await sendReservaActualizacionEmail(user, reservaUpdate);
+        res.status(200).json({ message: "Se ha actualizado la reserva. Se enviará un correo de actualización al destinatario"});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

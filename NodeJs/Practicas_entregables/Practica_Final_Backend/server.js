@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const conectarDb = require('./database/database.js');
+const startCronJob = require('./services/cronJob.js');
 require('dotenv').config();
 
 // Routes de las APIs
@@ -17,6 +18,7 @@ const port = process.env.port || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 conectarDb();
+startCronJob(); 
 
 // Rutas de los controllers
 app.use('/users', userRoutes);
