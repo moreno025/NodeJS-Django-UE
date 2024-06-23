@@ -1,8 +1,13 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from .models import Moto, Fabricante
 from .serializers import MotoSerializer, FabricanteSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+#ViewSet sobre el modelo de motos
+class MotoViewSet(viewsets.ModelViewSet):
+    queryset = Moto.objects.all()
+    serializer_class = MotoSerializer
 
 # Clases genericas para el modelo de moto
 class MotoList(generics.ListCreateAPIView):
@@ -39,10 +44,8 @@ class FabricanteDelete(generics.DestroyAPIView):
     serializer_class = FabricanteSerializer
     
 
-# Vista personalizada
 @api_view(['GET'])
 def motos_fabricante(request, fabricante_id):
-    moto = Moto.objects.filter(fabricante_id=fabricante_id)
-    serializer = MotoSerializer(moto, many=True)
+    motos = Moto.objects.filter(fabricante_id=fabricante_id)
+    serializer = MotoSerializer(motos, many=True)
     return Response(serializer.data)
-
