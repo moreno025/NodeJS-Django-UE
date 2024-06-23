@@ -12,5 +12,3 @@ urlpatterns = [
     path('fabricante/delete/<int:pk>/', FabricanteDelete.as_view(), name='fabricante-delete'),
     path('fabricantes/<int:fabricante_id>/moto/', motos_fabricante, name='moto-fabricante'),
 ]
-
-
