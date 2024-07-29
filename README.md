@@ -23,11 +23,12 @@
 
 ## Prácticas entregables
 
-- **appDjango --> Servidor básico Django**
+- **Servidor básico Django --> appDjango**
 - **Servidor completo en django**
 
 # Estructura
           
       ├── 📁 djangoUE/
            ├── 📁 appDjango (Servidor básico django)/ # Código con APIs Views Genéricas
+           ├── 📁 Servidor completo # Código con APIs Views Genéricas, Viewsets
            

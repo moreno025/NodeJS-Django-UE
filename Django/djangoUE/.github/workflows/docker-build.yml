@@ -1,0 +1,30 @@
+name: Build Docker Imagen
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Hacerle el checkout al repo
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12.4'
+
+    - name: Instalar las dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Configurar Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker imagen
+      run: docker build .

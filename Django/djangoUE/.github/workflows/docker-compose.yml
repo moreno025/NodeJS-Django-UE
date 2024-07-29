@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:8.0 
+    container_name: compose-db
+    ports:
+      - "3366:3306" 
+    volumes:
+      - mysql-data:/var/lib/mysql 
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: compose-db
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: contrasena1234
+
+volumes:
+  mysql-data:
+    driver: local
